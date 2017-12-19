@@ -5,11 +5,6 @@ package-lock.json
 .floo
 .flooignore
 
-client/__tests__/
-client/__tests__/App.test.js
-
-client/src/components/Test
-
 backend/dbInfo.js
 
 

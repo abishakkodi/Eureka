@@ -1,0 +1,2 @@
+export const UPDATE_PLAYLIST = 'UPDATE_PLAYLIST';
+
