@@ -22,7 +22,7 @@ const Home = function(props) {
       <FeaturedTwo />
     </div>
   )
-}   
+};
  
 
 export default Home;

@@ -15,6 +15,7 @@ import NavWhite from './Nav/NavWhite';
 import Main from './Main';
 import Admin from './Admin/Admin';
 import Walkthrough from './Signup/Walkthrough';
+import { withRouter } from 'react-router-dom';
 
 
 class App extends React.Component {
@@ -22,7 +23,7 @@ class App extends React.Component {
     super();
     this.state = {
       currentPage: 'home',
-      loggedIn: true,
+      loggedIn: false,
       currentUser: 'guest',
       topVideos: [],
       playlist: [],
@@ -51,6 +52,7 @@ class App extends React.Component {
   this.addLastVideoInRecentVideos = this.addLastVideoInRecentVideos.bind(this);
   this.handleClickHeart = this.handleClickHeart.bind(this);
   this.handleClickAddVideo = this.handleClickAddVideo.bind(this);
+  this.setMindfeedPlaylist = this.setMindfeedPlaylist.bind(this);
   };
 
 
@@ -67,7 +69,7 @@ class App extends React.Component {
   }
 
   goToSignup() {
-    this.setState({currentPage: 'signup'})
+    this.setState({currentPage: 'signup'});
   }
 
   goToDashboard() {
@@ -90,13 +92,14 @@ class App extends React.Component {
     this.setState({currentPage: 'walkthrough'})
   }
 
+
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   MVP FUNCTIONS
 * * * * * * * * * * * * * * * * * * * * * * * * * * */
 // load initial seed data
 
   componentDidMount() {
-
     axios.get('api/saveInitialData')
     .then((response) => {
       console.log('Initial data saved successfully', response);
@@ -105,6 +108,8 @@ class App extends React.Component {
       console.log(error);
     })
   }
+
+
 
 // post - send authentication info
   signup(event) {
@@ -141,11 +146,14 @@ class App extends React.Component {
       }
     })
     .then((response) => {
-      console.log(response.status);
+      console.log("Response Status: ", response.status);
       if (response.status === 200) {
         this.setState({currentUser: email,
                           loggedIn: true});
         this.goToHome();
+      } else if(response.status === 201) {
+        this.setState({currentUser: email, loggedIn: true});
+        this.goToWalkthrough();
       } else {
         console.log("Log In Fail. Try Again.");
         this.goToLogin();
@@ -268,6 +276,14 @@ class App extends React.Component {
     });
   }
 
+  setMindfeedPlaylist(playlist) {
+      console.log("Videos set in App Global state:", playlist);
+      this.setState({playlist: playlist},
+          () => {
+              this.setCurrentVideo();
+              this.goToDashboard();
+          })
+  }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * *
   ADDITIONAL FUNCTIONS
@@ -466,7 +482,7 @@ class App extends React.Component {
         return (<Admin handleClickAddVideo={this.handleClickAddVideo} />)
       }
       if(this.state.currentPage ==='walkthrough') {
-        return (<Walkthrough />)
+        return (<Walkthrough currentUser={this.state.currentUser} setMindfeedPlaylist={this.setMindfeedPlaylist}/>)
       }
    	}
 
@@ -485,7 +501,7 @@ class App extends React.Component {
         <div className='navbg'>
           {navToBeRendered()}
         </div>
-        <Main />
+          {componentToBeRendered()}
         <Footer />
       </div>
     )
@@ -494,7 +510,4 @@ class App extends React.Component {
 }
 
 export default App;
-
-
-
 

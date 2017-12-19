@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const dbUri = require('./dbInfo').dbUri;
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs');
 const VideoSubmissionSchema = require('./relational_schema/videoSubmission');
 const VideoPreferenceSchema = require('./relational_schema/videoPreference');
 
@@ -38,7 +37,11 @@ const UserSchema = new Schema({
         required: false
     },
     videosSubmitted: [VideoSubmissionSchema],
-    videoPreference: [VideoPreferenceSchema]
+    videoPreference: [VideoPreferenceSchema],
+    categoryPreference: {
+        category: [String],
+        subcategory: [String]
+    }
 });
 
 UserSchema.virtual('bookmarksCount').get(function () {
@@ -76,11 +79,11 @@ const VideoSchema = new Schema({
        required: false
    },
    category: {
-       type: [String],
+       type: String,
        required: false
    },
-   subCategory: {
-       type: [String],
+   subcategory: {
+       type: String,
        required: false
    },
    thumbnail: {
@@ -95,24 +98,6 @@ const VideoSchema = new Schema({
        type: String,
        required: false
    }
-});
-
-
-/* authenticate input against database */
-
-
-
-/* hashing a password before saving it to the database */
-
-UserSchema.pre('save', function (next) {
-    var user = this;
-    bcrypt.hash(user.password, 10, function (err, hash){
-        if (err) {
-            return next(err);
-        }
-        user.password = hash;
-        next();
-    })
 });
 
 

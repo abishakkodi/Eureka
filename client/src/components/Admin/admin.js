@@ -25,13 +25,28 @@ class Admin extends React.Component {
 
   this.handleChangeCategory = this.handleChangeCategory.bind(this);
   this.handleChangeSubcategory = this.handleChangeSubcategory.bind(this);
+  this.getFromAdminQueue = this.getFromAdminQueue.bind(this);
 
   };
 
   componentDidMount() {
+    //this.getFromAdminQueue();
     //get videos from adminQueue into videoQueue
       //write same function for refresh button
   }
+  
+  getFromAdminQueue() { //on mount and also for refresh button
+    axios.get('/api/getFromAdminQueue') 
+    .then((response) => {
+      let videos = response.data;
+      console.log("All videos from admin queue: ", videos)
+      this.setState({videoQueue: videos});
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
 
   handleChangeCategory(value) {
     this.setState({category: value});
@@ -55,7 +70,6 @@ class Admin extends React.Component {
       dateSubmitted: videoInfo.dateSubmitted
     }, () => {
       console.log(this.state); 
-    })
     // axios.post('/api/addVideo', {
     //   params: {
         
@@ -70,11 +84,11 @@ class Admin extends React.Component {
     //   if (response.data === "Valid video and saved") {
     //     {success()};
            //then remove item from admin queue in state and in db? or have a to be deleted queue upon refresh button?
-           //write refresh button to request more videos in the queue
     //   } else if (response.data === "Duration too long" || response.data === "Link not from valid provider") {
     //     {error()};
     //   }
     // })
+    })
 
   }
 
@@ -131,7 +145,7 @@ class Admin extends React.Component {
         <h2>Queued Videos:</h2>            
         <Alert message="Review only one video at a time as selecting a category/subcategory updates state separately than clicking the add video button." type="error" />
         <Table {...this.tableState} dataSource={sampleDataAdminPanel} columns={columns} />
-        <button className="refreshQueueButton"><Icon type="retweet" />Refresh Queue</button>
+        <button className="refreshQueueButton" onClick={this.getFromAdminQueue}><Icon type="retweet" />Refresh Queue</button>
       </div>
     )
   }
