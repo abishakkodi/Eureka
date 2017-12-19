@@ -34,5 +34,5 @@ const store = createStore(
   composedEnhancers
 )
 
-export default store;
+//export default store;
 

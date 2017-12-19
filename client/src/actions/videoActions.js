@@ -5,7 +5,6 @@ export function setTopVideos(topVideos){
   }
 }
 
-
 export function setPlaylist(playlist){
   return {
     type: 'SET_PLAYLIST',

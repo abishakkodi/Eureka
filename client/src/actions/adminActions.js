@@ -19,7 +19,6 @@ export function setCurrentUser(currentUser) {
   }
 }
 
-
 export function updateCounter(counter) {
   return {
       type: 'UPDATE_COUNTER',
